@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: bros-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: CORS_ORIGINS
+        value: "*"
