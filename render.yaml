@@ -6,4 +6,4 @@ services:
     healthCheckPath: /api/health
     envVars:
       - key: CORS_ORIGINS
-        value: "http://localhost:5173,http://127.0.0.1:5173,https://cl0nemebitch.github.io"
+        value: "*"
