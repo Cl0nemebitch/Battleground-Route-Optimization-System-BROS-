@@ -31,7 +31,6 @@ def demo_battlefield() -> BattlefieldMap:
             Edge(source="C2", target="OBJ"),
             Edge(source="W1", target="S1"),
             Edge(source="W1", target="C1"),
-            Edge(source="S1", target="W1"),
             Edge(source="A2", target="W1"),
         ],
     )

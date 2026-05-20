@@ -74,7 +74,8 @@ def cbs(
                     CBSNode(cost=new_cost, constraints=new_constraints, paths=new_paths),
                 )
 
-    return root_paths, total, conflicts_resolved
+    # Timed out — returning conflicting paths would be wrong; signal failure instead
+    return {}, float("inf"), conflicts_resolved
 
 
 def _find_conflict(
@@ -125,18 +126,25 @@ def _constrained_astar(
     g_score: dict[tuple[str, int], float] = {(start, 0): 0.0}
     expanded = 0
 
+    closed_set: set[tuple[str, int]] = set()
+
     while open_set:
         _, current, t = heapq.heappop(open_set)
+
+        if (current, t) in closed_set:
+            continue
+        closed_set.add((current, t))
         expanded += 1
 
         if current == goal:
+            goal_t = t  # capture timestep BEFORE came_from traversal modifies t
             path = [current]
             ct = t
             while (current, ct) in came_from:
                 current, ct = came_from[(current, ct)]
                 path.append(current)
             path.reverse()
-            return path, g_score[(path[-1], ct)], expanded
+            return path, g_score[(goal, goal_t)], expanded
 
         for neighbor, cost, _ in graph.neighbors(current):
             nt = t + 1

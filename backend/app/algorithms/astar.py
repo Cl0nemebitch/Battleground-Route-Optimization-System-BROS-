@@ -17,10 +17,15 @@ def astar(
     open_set: list[tuple[float, str]] = [(0.0, start)]
     came_from: dict[str, str] = {}
     g_score: dict[str, float] = {start: 0.0}
+    closed_set: set[str] = set()
     expanded = 0
 
     while open_set:
         _, current = heapq.heappop(open_set)
+
+        if current in closed_set:
+            continue
+        closed_set.add(current)
         expanded += 1
 
         if current == goal:
@@ -32,6 +37,8 @@ def astar(
             return path, g_score[goal], expanded
 
         for neighbor, cost, _ in graph.neighbors(current):
+            if neighbor in closed_set:
+                continue
             tentative = g_score[current] + cost
             if tentative < g_score.get(neighbor, float("inf")):
                 came_from[neighbor] = current

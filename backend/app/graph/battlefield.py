@@ -18,6 +18,8 @@ class BattlefieldGraph:
         self.weights = weights
         self.nodes: dict[str, Node] = {n.id: n for n in battlefield.nodes}
         self.adj: dict[str, list[tuple[str, float, dict[str, float]]]] = defaultdict(list)
+        # Store original edge distances so _rebuild_edges can reuse them
+        self._edge_distances: dict[tuple[str, str], float] = {}
 
         edge_set: set[tuple[str, str]] = set()
         for edge in battlefield.edges:
@@ -27,7 +29,10 @@ class BattlefieldGraph:
         for source, target in edge_set:
             if source not in self.nodes or target not in self.nodes:
                 continue
-            cost, breakdown = self._edge_cost(source, target, edge_distance(source, target, battlefield))
+            dist = edge_distance(source, target, battlefield)
+            self._edge_distances[(source, target)] = dist
+            self._edge_distances[(target, source)] = dist
+            cost, breakdown = self._edge_cost(source, target, dist)
             self.adj[source].append((target, cost, breakdown))
 
     def neighbors(self, node_id: str) -> list[tuple[str, float, dict[str, float]]]:
@@ -81,8 +86,11 @@ class BattlefieldGraph:
                 if pair in seen:
                     continue
                 seen.add(pair)
-                nu, nv = self.nodes[source], self.nodes[target]
-                dist = math.hypot(nu.x - nv.x, nu.y - nv.y)
+                # Reuse stored original distance — do NOT recalculate Euclidean
+                # because the original edge may have had a custom distance value
+                dist = self._edge_distances.get((source, target),
+                    math.hypot(self.nodes[source].x - self.nodes[target].x,
+                               self.nodes[source].y - self.nodes[target].y))
                 cost_s, bd_s = self._edge_cost(source, target, dist)
                 cost_t, bd_t = self._edge_cost(target, source, dist)
                 self.adj[source].append((target, cost_s, bd_s))
