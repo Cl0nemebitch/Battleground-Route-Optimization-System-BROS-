@@ -4,4 +4,10 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - CORS_ORIGINS=*
+      - CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

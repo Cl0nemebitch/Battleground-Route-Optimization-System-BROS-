@@ -223,6 +223,14 @@ export default function App() {
                 setResult(null);
               }}
             />
+          ) : error ? (
+            <div className="panel h-[400px] flex flex-col items-center justify-center gap-3 text-battlefield-muted">
+              <p className="text-battlefield-danger text-sm font-semibold m-0">⚠ Failed to connect to API</p>
+              <p className="text-xs text-battlefield-muted m-0 max-w-xs text-center">{error}</p>
+              <p className="text-xs text-battlefield-muted m-0 max-w-xs text-center opacity-60">
+                Make sure the backend is running at the configured API URL.
+              </p>
+            </div>
           ) : (
             <div className="panel h-[400px] flex items-center justify-center text-battlefield-muted">
               Loading map…
