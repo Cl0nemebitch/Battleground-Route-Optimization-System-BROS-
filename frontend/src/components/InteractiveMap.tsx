@@ -4,8 +4,8 @@ import { addNode, toggleEdge } from "../utils/mapEdit";
 
 export type MapTool = "select" | "add" | "link";
 
-const WIDTH = 800;
-const HEIGHT = 480;
+const WIDTH  = 900;
+const HEIGHT = 520;
 
 interface InteractiveMapProps {
   map: BattlefieldMap;
@@ -135,12 +135,12 @@ export default function InteractiveMap({
     : "default";
 
   return (
-    <div className="relative panel overflow-hidden">
+    <div className="absolute inset-0">
       <svg
         ref={svgRef}
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-        className="w-full block select-none touch-none"
-        style={{ cursor, minHeight: 360 }}
+        className="w-full h-full block select-none touch-none"
+        style={{ cursor }}
         onClick={handleCanvasClick}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -312,19 +312,35 @@ export default function InteractiveMap({
             .join(" ");
           return (
             <>
-              {/* Wide outer glow */}
-              <path d={d} fill="none" stroke="#5ee4a8" strokeWidth={12}
+              {/* Wide outer glow — road base */}
+              <path d={d} fill="none" stroke="#10b981" strokeWidth={14}
                 strokeLinecap="round" strokeLinejoin="round"
-                opacity={0.12} pointerEvents="none" />
+                opacity={0.18} filter="url(#glow-path)" pointerEvents="none" />
               {/* Mid glow */}
               <path d={d} fill="none" stroke="#5ee4a8" strokeWidth={6}
                 strokeLinecap="round" strokeLinejoin="round"
-                opacity={0.22} pointerEvents="none" />
-              {/* Main line */}
-              <path d={d} fill="none" stroke="#5ee4a8" strokeWidth={3.5}
+                opacity={0.3} filter="url(#glow-path)" pointerEvents="none" />
+              {/* Crisp road core */}
+              <path d={d} fill="none" stroke="#5ee4a8" strokeWidth={3}
                 strokeLinecap="round" strokeLinejoin="round"
                 markerEnd="url(#arrow-vol)" opacity={0.95}
                 filter="url(#glow-path)" pointerEvents="none" />
+              {/* Animated flowing dashes (marching ants = moving traffic) */}
+              <path d={d} fill="none" stroke="rgba(255,255,255,0.75)" strokeWidth={1.5}
+                strokeLinecap="round" strokeLinejoin="round"
+                strokeDasharray="10 10"
+                style={{ animation: "roadFlow 1.2s linear infinite" }}
+                pointerEvents="none" />
+              {/* Waypoint junction dots */}
+              {path.map((id) => {
+                const n = nodeMap[id];
+                return (
+                  <circle key={`wp-${id}`} cx={n.x} cy={n.y} r={5}
+                    fill="#fff" opacity={0.9}
+                    style={{ filter: "drop-shadow(0 0 5px #5ee4a8)" }}
+                    pointerEvents="none" />
+                );
+              })}
             </>
           );
         })()}
@@ -562,14 +578,9 @@ export default function InteractiveMap({
 
       {/* Tool hints */}
       {tool === "link" && linkFrom && (
-        <p className="absolute bottom-2 left-2 text-xs text-battlefield-muted bg-battlefield-bg/90 px-2 py-1 rounded m-0">
+        <div className="absolute bottom-3 left-3 font-mono text-[10px] text-[#5ee4a8] bg-[#060d1c]/90 border border-[#1e3050] px-3 py-1.5 rounded-full">
           Link from <strong>{linkFrom}</strong> — click another node
-        </p>
-      )}
-      {pickTarget && (
-        <p className="absolute bottom-2 left-2 text-xs text-battlefield-accent bg-battlefield-bg/90 px-2 py-1 rounded m-0">
-          Click a node to set {pickTarget === "start" ? "START" : "GOAL"}
-        </p>
+        </div>
       )}
     </div>
   );
