@@ -1,62 +1,73 @@
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;700;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ═══════════════════════════════════════════
-   KEYFRAME ANIMATIONS  (from Stitch design)
-═══════════════════════════════════════════ */
-@keyframes ripple {
-  0%   { transform: scale(0.8); opacity: 0.9; }
-  100% { transform: scale(2.8); opacity: 0;   }
+/* ══════════════════════════════════════════
+   AEGIS COMMAND — KEYFRAMES
+══════════════════════════════════════════ */
+@keyframes pulseAmber {
+  0%,100% { filter: drop-shadow(0 0 4px rgba(245,158,11,0.4)); }
+  50%      { filter: drop-shadow(0 0 14px rgba(245,158,11,0.9)); }
 }
-@keyframes breathe {
-  0%,100% { opacity: 0.6; }
-  50%      { opacity: 1;   }
+@keyframes pulseAmberBox {
+  0%,100% { box-shadow: 0 0 8px rgba(245,158,11,0.35); }
+  50%      { box-shadow: 0 0 22px rgba(245,158,11,0.75); }
 }
-@keyframes flowDash {
-  0%   { stroke-dashoffset: 24; }
-  100% { stroke-dashoffset: 0;  }
+@keyframes pulseCrimson {
+  0%,100% { box-shadow: 0 0 6px rgba(225,29,72,0.4); }
+  50%      { box-shadow: 0 0 18px rgba(225,29,72,0.8); }
 }
-@keyframes pulseGlow {
-  0%,100% { box-shadow: 0 0 10px rgba(94,228,168,0.45); }
-  50%      { box-shadow: 0 0 28px rgba(94,228,168,0.85); }
-}
-@keyframes pulseGlowSvg {
-  0%,100% { filter: drop-shadow(0 0 6px rgba(94,228,168,0.4)); }
-  50%      { filter: drop-shadow(0 0 16px rgba(94,228,168,0.9)); }
-}
-@keyframes scanline {
-  0%   { transform: translateY(-100%); opacity: 0; }
-  10%  { opacity: 0.06; }
-  90%  { opacity: 0.06; }
-  100% { transform: translateY(100vh); opacity: 0; }
-}
-@keyframes mountainBreath {
-  0%,100% { opacity: 0.55; }
-  50%      { opacity: 0.9;  }
+@keyframes rippleWater {
+  0%   { transform: scale(0.5); opacity: 0.9; }
+  100% { transform: scale(2.5); opacity: 0; }
 }
 @keyframes roadFlow {
-  to { stroke-dashoffset: -20; }
+  from { stroke-dashoffset: 24; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes radarSpin {
+  100% { transform: rotate(360deg); }
+}
+@keyframes mountainBreathe {
+  0%,100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+@keyframes scanMove {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 0.05; }
+  90%  { opacity: 0.05; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+@keyframes missionPing {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
+@keyframes clockTick {
+  0%,100% { opacity: 1; }
+  49%,51% { opacity: 0; }
+}
+@keyframes reticleRotate {
+  100% { transform: rotate(360deg); }
+}
+@keyframes beaconPulse {
+  0%   { transform: scale(1);   opacity: 0.8; }
+  100% { transform: scale(2.5); opacity: 0;   }
 }
 
-/* ═══════════════════════════════════════════
-   BASE
-═══════════════════════════════════════════ */
+/* ══════════════════════════════════════════
+   AEGIS BASE
+══════════════════════════════════════════ */
 @layer base {
   *, *::before, *::after { box-sizing: border-box; }
-
-  html { height: 100%; }
+  html, body { height: 100%; margin: 0; }
 
   body {
-    margin: 0;
-    height: 100%;
-    min-height: 100vh;
-    background: #060d1c;
-    color: #cbd5e1;
-    font-family: 'IBM Plex Sans', sans-serif;
+    background: #0a0c10;
+    color: #f0e0d1;
+    font-family: 'JetBrains Mono', monospace;
     -webkit-font-smoothing: antialiased;
     overflow: hidden;
   }
@@ -64,177 +75,150 @@
   #root { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 }
 
-/* ═══════════════════════════════════════════
-   COMPONENTS
-═══════════════════════════════════════════ */
+/* ══════════════════════════════════════════
+   AEGIS COMPONENTS
+══════════════════════════════════════════ */
 @layer components {
 
-  /* ── Map background ── */
+  /* Map background — hexagonal-ish grid */
   .map-bg {
-    background-color: #060d1c;
-    background-size: 40px 40px;
+    background-color: #0a0c10;
     background-image:
-      linear-gradient(to right, rgba(30,48,80,0.22) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(30,48,80,0.22) 1px, transparent 1px);
+      linear-gradient(rgba(160,142,122,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(160,142,122,0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
   }
   .map-vignette {
-    box-shadow: inset 0 0 180px rgba(0,0,0,0.85);
+    box-shadow: inset 0 0 200px rgba(0,0,0,0.9);
   }
 
-  /* ── Glass panel ── */
+  /* CRT scanline overlay */
+  .crt-overlay {
+    position: fixed; inset: 0; z-index: 50; pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    mix-blend-mode: overlay;
+    opacity: 0.5;
+  }
+  .crt-scan::after {
+    content: '';
+    position: absolute; left: 0; right: 0; height: 80px; pointer-events: none; z-index: 49;
+    background: linear-gradient(transparent, rgba(245,158,11,0.04), transparent);
+    animation: scanMove 10s linear infinite;
+  }
+
+  /* Glass panel */
   .panel {
-    background: rgba(12,23,38,0.92);
-    border: 1px solid #1e3050;
-    border-radius: 8px;
-    backdrop-filter: blur(16px);
+    background: rgba(17,21,32,0.95);
+    border: 1px solid #252d3d;
+    backdrop-filter: blur(12px);
   }
 
-  /* ── Buttons ── */
+  /* Amber primary button */
   .btn-primary {
-    display: flex; align-items: center; justify-content: center; gap: 6px;
-    padding: 10px 20px;
-    background: #22c55e;
-    color: #060d1c;
-    font-family: 'Sora', sans-serif;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 12px 20px;
+    background: rgba(245,158,11,0.15);
+    border: 1px solid #f59e0b;
+    color: #f59e0b;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
-    font-size: 12px;
-    letter-spacing: 0.08em;
+    font-size: 13px;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    border-radius: 6px;
-    border: none;
     cursor: pointer;
-    animation: pulseGlow 2s infinite;
-    transition: background 200ms;
+    position: relative; overflow: hidden;
+    animation: pulseAmberBox 2s infinite;
+    transition: background 200ms, box-shadow 200ms;
   }
-  .btn-primary:hover  { background: #4ade80; }
-  .btn-primary:disabled { opacity: 0.45; animation: none; cursor: not-allowed; }
+  .btn-primary:hover  { background: rgba(245,158,11,0.25); }
+  .btn-primary:disabled { opacity: 0.4; animation: none; cursor: not-allowed; }
 
-  .btn-secondary {
-    padding: 6px 14px;
-    background: transparent;
-    color: #64748b;
-    font-size: 11px;
-    font-family: 'IBM Plex Sans', sans-serif;
-    border: 1px solid #1e3050;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 150ms;
-  }
-  .btn-secondary:hover { border-color: #5ee4a8; color: #5ee4a8; background: rgba(94,228,168,0.06); }
-
+  /* Tool button */
   .btn-tool {
-    padding: 6px 12px;
-    font-size: 11px;
-    font-family: 'JetBrains Mono', monospace;
-    border: 1px solid #1e3050;
-    border-radius: 6px;
-    background: transparent;
-    color: #64748b;
-    cursor: pointer;
-    transition: all 150ms;
-  }
-  .btn-tool:hover    { border-color: #5ee4a8; color: #5ee4a8; }
-  .btn-tool.active   { border-color: #5ee4a8; background: rgba(94,228,168,0.12); color: #5ee4a8; }
-  .btn-tool.active-orange { border-color: #f0a86e; background: rgba(240,168,110,0.12); color: #f0a86e; }
-
-  /* ── Sliders ── */
-  .slider-label {
+    display: flex; align-items: center; gap: 4px;
+    padding: 5px 10px;
     font-size: 10px;
     font-family: 'JetBrains Mono', monospace;
+    border: 1px solid #252d3d;
+    background: transparent;
+    color: #a08e7a;
+    cursor: pointer;
+    transition: all 150ms;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #64748b;
+    letter-spacing: 0.08em;
   }
+  .btn-tool:hover     { border-color: #f59e0b; color: #f59e0b; }
+  .btn-tool.active    { border-color: #f59e0b; background: rgba(245,158,11,0.1); color: #f59e0b; }
+  .btn-tool.active-red { border-color: #e11d48; background: rgba(225,29,72,0.1); color: #e11d48; }
 
+  /* Amber range slider */
   input[type=range] {
     -webkit-appearance: none;
     width: 100%;
-    height: 4px;
-    background: #1e3050;
-    border-radius: 2px;
+    height: 3px;
+    background: #252d3d;
     outline: none;
   }
   input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    background: #5ee4a8;
+    width: 13px; height: 13px;
+    border-radius: 0;
+    background: #f59e0b;
     cursor: pointer;
-    box-shadow: 0 0 8px rgba(94,228,168,0.7);
-    transition: transform 150ms;
+    box-shadow: 0 0 8px rgba(245,158,11,0.7);
+    transition: transform 120ms;
   }
-  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.25); }
+  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.3); }
 
-  /* ── Custom scrollbar ── */
-  ::-webkit-scrollbar       { width: 5px; }
-  ::-webkit-scrollbar-track { background: #0c1726; }
-  ::-webkit-scrollbar-thumb { background: #1e3050; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #5ee4a8; }
+  /* Scrollbar */
+  ::-webkit-scrollbar       { width: 4px; }
+  ::-webkit-scrollbar-track { background: #0a0c10; }
+  ::-webkit-scrollbar-thumb { background: #252d3d; }
+  ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
 
-  /* ── Node CSS (HTML nodes) ── */
-  .map-node {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    transition: transform 150ms ease;
-    z-index: 10;
-    cursor: grab;
-  }
-  .map-node:hover { transform: translate(-50%, -50%) scale(1.1); z-index: 20; }
-  .map-node:active { cursor: grabbing; }
-
-  /* Water ripples */
+  /* Water ripple rings */
   .ripple-ring {
     position: absolute; inset: 0;
-    border: 2px solid rgba(59,130,246,0.7);
+    border: 1.5px solid rgba(14,165,233,0.65);
     border-radius: 50%;
-    animation: ripple 3s linear infinite;
+    animation: rippleWater 2s cubic-bezier(0,0.2,0.8,1) infinite;
     pointer-events: none;
   }
-  .ripple-ring:nth-child(2) { animation-delay: 1s;  border-color: rgba(56,189,248,0.5); }
-  .ripple-ring:nth-child(3) { animation-delay: 2s;  border-color: rgba(14,165,233,0.35); }
+  .ripple-ring:nth-child(2) { animation-delay: 0.6s;  border-color: rgba(56,189,248,0.45); }
+  .ripple-ring:nth-child(3) { animation-delay: 1.2s;  border-color: rgba(14,165,233,0.3); }
+  .ripple-ring:nth-child(4) { animation-delay: 1.8s;  border-color: rgba(56,189,248,0.2); }
 
-  /* Mountain contour breath */
-  .contour-ring {
-    position: absolute; top: 50%; left: 50%;
-    border: 1px solid rgba(160,120,70,0.6);
-    border-radius: 40% 60% 45% 55%;
-    transform: translate(-50%, -50%) rotateX(55deg);
-    animation: mountainBreath 4s ease-in-out infinite;
+  /* Radar spinner */
+  .radar-spin { animation: radarSpin 2.5s linear infinite; }
+
+  /* Mountain contour */
+  .contour-ring { animation: mountainBreathe 4s ease-in-out infinite; }
+
+  /* Mission active badge blink */
+  .mission-ping { animation: missionPing 1.2s ease-in-out infinite; }
+
+  /* Beacon HQ pulse */
+  .beacon-ring {
+    position: absolute; inset: -6px;
+    border: 1.5px solid #f59e0b;
+    border-radius: 50%;
+    animation: beaconPulse 2s ease-out infinite;
     pointer-events: none;
   }
+  .beacon-ring:nth-child(2) { animation-delay: 0.7s; }
 
-  /* Scanline CRT effect overlay */
-  .scanline::before {
-    content: '';
-    position: absolute; inset: 0; z-index: 100; pointer-events: none;
-    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px);
-  }
-  .scanline::after {
-    content: '';
-    position: absolute; left: 0; right: 0; height: 60px; z-index: 101; pointer-events: none;
-    background: linear-gradient(to bottom, transparent, rgba(94,228,168,0.04) 50%, transparent);
-    animation: scanline 8s linear infinite;
-  }
-
-  /* Road path animation on SVG */
-  .road-flow {
-    animation: roadFlow 1.2s linear infinite;
-  }
-
-  /* Node label tag */
-  .node-tag {
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    color: #94a3b8;
-    background: rgba(6,13,28,0.85);
-    padding: 2px 5px;
-    border-radius: 3px;
-    border: 1px solid #1e3050;
-    white-space: nowrap;
+  /* Reticle OBJ spinner */
+  .reticle-ring {
+    position: absolute; inset: -5px;
+    border: 1.5px dashed #e11d48;
+    border-radius: 50%;
+    animation: reticleRotate 4s linear infinite;
     pointer-events: none;
   }
 }

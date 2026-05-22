@@ -225,7 +225,7 @@ export default function InteractiveMap({
           {/* ── Path arrow marker ── */}
           <marker id="arrow-vol" viewBox="0 0 12 12" refX="10" refY="6"
             markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M 0 0 L 12 6 L 0 12 z" fill="#5ee4a8" />
+            <path d="M 0 0 L 12 6 L 0 12 z" fill="#f59e0b" />
           </marker>
 
           {/* Background vignette */}
@@ -238,7 +238,7 @@ export default function InteractiveMap({
         {/* ═══════════════════════════════════════════════════════════
             BACKGROUND
         ═══════════════════════════════════════════════════════════ */}
-        <rect width={WIDTH} height={HEIGHT} fill="#060d1c" />
+        <rect width={WIDTH} height={HEIGHT} fill="#0a0c10" />
         <rect width={WIDTH} height={HEIGHT} fill="url(#topo-grid)" />
         <rect width={WIDTH} height={HEIGHT} fill="url(#bg-vignette)" pointerEvents="none" />
 
@@ -313,20 +313,20 @@ export default function InteractiveMap({
           return (
             <>
               {/* Wide outer glow — road base */}
-              <path d={d} fill="none" stroke="#10b981" strokeWidth={14}
+              <path d={d} fill="none" stroke="#92400e" strokeWidth={14}
                 strokeLinecap="round" strokeLinejoin="round"
-                opacity={0.18} filter="url(#glow-path)" pointerEvents="none" />
+                opacity={0.22} filter="url(#glow-path)" pointerEvents="none" />
               {/* Mid glow */}
-              <path d={d} fill="none" stroke="#5ee4a8" strokeWidth={6}
+              <path d={d} fill="none" stroke="#f59e0b" strokeWidth={6}
                 strokeLinecap="round" strokeLinejoin="round"
                 opacity={0.3} filter="url(#glow-path)" pointerEvents="none" />
               {/* Crisp road core */}
-              <path d={d} fill="none" stroke="#5ee4a8" strokeWidth={3}
+              <path d={d} fill="none" stroke="#f59e0b" strokeWidth={3}
                 strokeLinecap="round" strokeLinejoin="round"
                 markerEnd="url(#arrow-vol)" opacity={0.95}
                 filter="url(#glow-path)" pointerEvents="none" />
               {/* Animated flowing dashes (marching ants = moving traffic) */}
-              <path d={d} fill="none" stroke="rgba(255,255,255,0.75)" strokeWidth={1.5}
+              <path d={d} fill="none" stroke="rgba(255,255,255,0.85)" strokeWidth={1.5}
                 strokeLinecap="round" strokeLinejoin="round"
                 strokeDasharray="10 10"
                 style={{ animation: "roadFlow 1.2s linear infinite" }}
@@ -337,7 +337,7 @@ export default function InteractiveMap({
                 return (
                   <circle key={`wp-${id}`} cx={n.x} cy={n.y} r={5}
                     fill="#fff" opacity={0.9}
-                    style={{ filter: "drop-shadow(0 0 5px #5ee4a8)" }}
+                    style={{ filter: "drop-shadow(0 0 5px #f59e0b)" }}
                     pointerEvents="none" />
                 );
               })}
@@ -435,20 +435,33 @@ export default function InteractiveMap({
               {/* ── Selection / path rings ── */}
               {onPath && (
                 <circle cx={n.x} cy={n.y} r={r + 11}
-                  fill="#5ee4a8" opacity={0.15} pointerEvents="none" />
+                  fill="#f59e0b" opacity={0.15} pointerEvents="none" />
               )}
               {isSelected && (
                 <circle cx={n.x} cy={n.y} r={r + 8}
-                  fill="none" stroke="#6eb5ff" strokeWidth={2} strokeDasharray="4 3"
+                  fill="none" stroke="#f59e0b" strokeWidth={2} strokeDasharray="4 3"
                   pointerEvents="none" />
               )}
-              {role !== "none" && (
-                <circle cx={n.x} cy={n.y} r={r + 5}
-                  fill="none"
-                  stroke={role === "start" ? "#5ee4a8" : "#f0a86e"}
-                  strokeWidth={2.5}
-                  pointerEvents="none"
-                />
+              {role === "start" && (
+                <>
+                  <circle cx={n.x} cy={n.y} r={r + 5} fill="none" stroke="#f59e0b" strokeWidth={2} pointerEvents="none" />
+                  <circle cx={n.x} cy={n.y} r={r + 5} fill="none" stroke="#f59e0b" strokeWidth={1.5} pointerEvents="none">
+                    <animate attributeName="r" values={`${r + 5};${r + 20}`} dur="2s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.8;0" dur="2s" repeatCount="indefinite" />
+                  </circle>
+                  <circle cx={n.x} cy={n.y} r={r + 5} fill="none" stroke="#f59e0b" strokeWidth={1.5} pointerEvents="none">
+                    <animate attributeName="r" values={`${r + 5};${r + 20}`} dur="2s" begin="0.7s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.8;0" dur="2s" begin="0.7s" repeatCount="indefinite" />
+                  </circle>
+                </>
+              )}
+              {role === "goal" && (
+                <>
+                  <circle cx={n.x} cy={n.y} r={r + 5} fill="none" stroke="#e11d48" strokeWidth={2} pointerEvents="none" />
+                  <circle cx={n.x} cy={n.y} r={r + 8} fill="none" stroke="#e11d48" strokeWidth={1.5} strokeDasharray="6 4" pointerEvents="none">
+                    <animateTransform attributeName="transform" type="rotate" from={`0 ${n.x} ${n.y}`} to={`360 ${n.x} ${n.y}`} dur="6s" repeatCount="indefinite" />
+                  </circle>
+                </>
               )}
 
               {/* ── MAIN SPHERE ── */}
@@ -550,7 +563,7 @@ export default function InteractiveMap({
 
               {role === "start" && (
                 <text x={n.x} y={n.y - r - 10}
-                  textAnchor="middle" fill="#5ee4a8"
+                  textAnchor="middle" fill="#f59e0b"
                   fontSize={9} fontWeight={700} pointerEvents="none"
                   style={{ filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.9))" }}>
                   START
@@ -558,7 +571,7 @@ export default function InteractiveMap({
               )}
               {role === "goal" && (
                 <text x={n.x} y={n.y - r - 10}
-                  textAnchor="middle" fill="#f0a86e"
+                  textAnchor="middle" fill="#e11d48"
                   fontSize={9} fontWeight={700} pointerEvents="none"
                   style={{ filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.9))" }}>
                   GOAL
@@ -578,7 +591,7 @@ export default function InteractiveMap({
 
       {/* Tool hints */}
       {tool === "link" && linkFrom && (
-        <div className="absolute bottom-3 left-3 font-mono text-[10px] text-[#5ee4a8] bg-[#060d1c]/90 border border-[#1e3050] px-3 py-1.5 rounded-full">
+        <div className="absolute bottom-3 left-3 font-mono text-[10px] text-[#f59e0b] bg-[#0a0c10]/95 border border-[#252d3d] px-3 py-1.5 rounded-full">
           Link from <strong>{linkFrom}</strong> — click another node
         </div>
       )}
